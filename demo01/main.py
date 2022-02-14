@@ -9,7 +9,12 @@ class HttpRequestHandler(BaseHTTPRequestHandler):
         self.send_response(200)  # код ответа
         self.send_header("Content-Type", 'text/html')  # заголовок ответа
         self.end_headers()  # пустая строка
-        with open(Path("html", "index.html"), 'rb') as f:
+        page = 'index.html' if self.path == '/' else self.path[1:]
+        print("page: " + page)
+        path = Path("html", page)
+        if not path.exists():
+            path = Path("html", "404.html")
+        with open(path, 'rb') as f:
             self.wfile.write(f.read())  # тело ответа
 
     def print_info(self):
